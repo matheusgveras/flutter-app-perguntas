@@ -9,17 +9,7 @@ main() {
 
 class _PerguntaAppState extends State<PerguntaApp> {
   var _perguntaSelecionada = 0;
-
-  void _responder(){
-    setState(() {
-      _perguntaSelecionada++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    final List<Map<String, Object>> perguntas = [
+     final _perguntas = const [
      {
        'texto': 'Pergunta #1',
        'resposta': ['#1 Resp1','#1 Resp2','#1 Resp3','#1 Resp4']
@@ -36,25 +26,43 @@ class _PerguntaAppState extends State<PerguntaApp> {
        'texto': 'Pergunta #4',
        'resposta': ['#4 Resp1','#4 Resp2','#4 Resp3','#4 Resp4']
      }
-    ];
+  ];
 
-    List<Widget> respostas = [];
-    for(var textResp in perguntas[_perguntaSelecionada]['resposta']){
-      respostas.add(Resposta(textResp, _responder));
+  void _responder(){
+    if(temPerguntaSelecionada) {
+      setState(() {
+        _perguntaSelecionada++;
+      });
     }
+  }
+
+  bool get temPerguntaSelecionada {
+    return _perguntaSelecionada < _perguntas.length;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+   
+
+    List<String> respostas = temPerguntaSelecionada 
+    ? _perguntas[_perguntaSelecionada]['resposta']
+    : null;
 
     return MaterialApp(
-      title: 'Ola Mundo 2',
+      title: 'Perguntas',
       home: Scaffold(
         appBar: AppBar(
           title: Text('Perguntas'),
-        ),
-        body: Column(
+        ), 
+        body: temPerguntaSelecionada
+        ? Column(
           children: [
-            Questao(perguntas[_perguntaSelecionada]['texto']),
-           ...respostas
+            Questao(_perguntas[_perguntaSelecionada]['texto']),
+           ...respostas.map((text) => Resposta(text, _responder)).toList()
           ],
-        )
+        ) 
+        : null
       )
     );
   }
