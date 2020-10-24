@@ -1,6 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import './questao.dart';
 import './resposta.dart';
 main() {
@@ -9,12 +9,13 @@ main() {
 
 class _PerguntaAppState extends State<PerguntaApp> {
   var _perguntaSelecionada = 0;
+
   void _responder(){
     setState(() {
       _perguntaSelecionada++;
     });
-    
   }
+
   @override
   Widget build(BuildContext context) {
 
@@ -36,9 +37,12 @@ class _PerguntaAppState extends State<PerguntaApp> {
        'resposta': ['#4 Resp1','#4 Resp2','#4 Resp3','#4 Resp4']
      }
     ];
-    for(textResp in perguntas[_perguntaSelecionada]['resposta']){
-      
+
+    List<Widget> respostas = [];
+    for(var textResp in perguntas[_perguntaSelecionada]['resposta']){
+      respostas.add(Resposta(textResp, _responder));
     }
+
     return MaterialApp(
       title: 'Ola Mundo 2',
       home: Scaffold(
@@ -48,9 +52,7 @@ class _PerguntaAppState extends State<PerguntaApp> {
         body: Column(
           children: [
             Questao(perguntas[_perguntaSelecionada]['texto']),
-            Resposta('Resposta 1', _responder),
-            Resposta('Resposta 2', _responder),
-            Resposta('Resposta 3', _responder)
+           ...respostas
           ],
         )
       )
@@ -60,7 +62,6 @@ class _PerguntaAppState extends State<PerguntaApp> {
 }
 
 class PerguntaApp extends StatefulWidget {
- 
   @override
   _PerguntaAppState createState() {
     return _PerguntaAppState();
